@@ -1,0 +1,206 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container itinerary-page">
+
+  <div class="itinerary-header">
+    <div class="hero-badge" style="background:rgba(44,74,62,0.1);border-color:rgba(44,74,62,0.3);color:var(--accent);">✦ Trip Planner</div>
+    <h1 class="section-title mt-2">My Travel Itinerary</h1>
+    <p class="section-subtitle">Plan, organise and track your perfect trip</p>
+  </div>
+
+  <div class="itinerary-summary">
+    <div class="d-flex align-items-center justify-content-between">
+      <h5 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin:0;">Trip Overview</h5>
+      <span class="badge-custom" style="background:rgba(200,149,108,0.25);color:#F0D9C8;">Active Plan</span>
+    </div>
+
+    <div class="itinerary-summary-grid">
+      <div class="itinerary-summary-item">
+        <div class="itinerary-summary-num"><%= itineraryItems ? itineraryItems.length : 0 %></div>
+        <div class="itinerary-summary-label">Stays</div>
+      </div>
+
+      <div class="itinerary-summary-item">
+        <div class="itinerary-summary-num"><%= itineraryItems ? new Set(itineraryItems.map(i => i.location)).size : 0 %></div>
+        <div class="itinerary-summary-label">Cities</div>
+      </div>
+
+      <div class="itinerary-summary-item">
+        <div class="itinerary-summary-num">
+          ₹<%= itineraryItems ? itineraryItems.reduce((s, i) => s + (i.price || 0), 0).toLocaleString("en-IN") : 0 %>
+        </div>
+        <div class="itinerary-summary-label">Est. Cost / night</div>
+      </div>
+
+      <div class="itinerary-summary-item">
+        <div class="itinerary-summary-num"><%= itineraryItems ? itineraryItems.length * 2 : 0 %></div>
+        <div class="itinerary-summary-label">Nights</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h5 style="font-family:'Playfair Display',serif;font-weight:700;margin:0;">Saved Stays</h5>
+        <a href="/listings" class="btn-outline-custom" style="padding:0.4rem 1rem;font-size:0.82rem;">
+          <i class="fas fa-plus"></i> Add More
+        </a>
+      </div>
+
+      <% if (!itineraryItems || itineraryItems.length === 0) { %>
+        <div style="text-align:center;padding:3rem 1rem;background:var(--white);border-radius:var(--radius);border:2px dashed var(--border);">
+          <i class="fas fa-map-marked-alt" style="font-size:2.5rem;color:var(--border);margin-bottom:1rem;display:block;"></i>
+          <h6 style="font-weight:700;color:var(--text-muted);">No stays added yet</h6>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem;">Browse listings and click "Add to Itinerary" to start planning</p>
+          <a href="/listings" class="btn-primary-custom">Browse Stays</a>
+        </div>
+      <% } else { %>
+        <% itineraryItems.forEach((item, idx) => { %>
+          <div class="itinerary-card">
+            <div class="d-flex gap-3 align-items-start">
+              <% if (item.image) { %>
+                <img src="<%= item.image %>" alt="<%= item.title %>" style="width:80px;height:80px;object-fit:cover;border-radius:10px;flex-shrink:0;" />
+              <% } else { %>
+                <div style="width:80px;height:80px;background:var(--bg-2);border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+                  <i class="fas fa-hotel" style="color:var(--primary);font-size:1.5rem;"></i>
+                </div>
+              <% } %>
+
+              <div class="flex-grow-1">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div>
+                    <div style="font-family:'Playfair Display',serif;font-weight:600;font-size:1rem;margin-bottom:0.1rem;"><%= item.title %></div>
+                    <div style="font-size:0.78rem;color:var(--text-muted);">
+                      <i class="fas fa-location-dot me-1"></i><%= item.location %>
+                    </div>
+                  </div>
+                  <div style="font-weight:700;color:var(--accent);font-size:0.9rem;">
+                    ₹<%= item.price ? item.price.toLocaleString("en-IN") : "—" %>/night
+                  </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-2 align-items-center">
+                  <div style="background:var(--bg-2);border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem;">
+                    <span style="color:var(--text-muted);">Day</span>
+                    <input type="number" min="1" max="30" value="<%= idx + 1 %>" style="width:36px;border:none;background:transparent;font-weight:700;font-size:0.82rem;text-align:center;outline:none;" />
+                  </div>
+
+                  <div style="background:var(--bg-2);border-radius:6px;padding:0.3rem 0.7rem;font-size:0.75rem;">
+                    <input type="number" min="1" max="30" value="2" style="width:28px;border:none;background:transparent;font-weight:700;font-size:0.82rem;text-align:center;outline:none;" />
+                    <span style="color:var(--text-muted);"> nights</span>
+                  </div>
+
+                  <form action="/itinerary/<%= item._id %>?_method=DELETE" method="POST" style="margin-left:auto;">
+                    <button type="submit" style="background:none;border:none;color:#E63946;font-size:0.82rem;cursor:pointer;padding:0.3rem 0.5rem;border-radius:6px;">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h5 style="font-family:'Playfair Display',serif;font-weight:700;margin:0;">Day-by-Day Plan</h5>
+        <button class="itinerary-add-btn" style="width:auto;padding:0.4rem 1rem;font-size:0.82rem;border-radius:50px;" onclick="addDay()">
+          <i class="fas fa-plus"></i> Add Day
+        </button>
+      </div>
+
+      <div id="dayPlanContainer">
+        <div class="mb-3 day-block">
+          <div class="itinerary-day-header">
+            <div class="itinerary-day-num">Day 1</div>
+            <input type="text" placeholder="e.g. Arrival & Explore" class="day-title-input" />
+          </div>
+
+          <ul class="itinerary-activity-list">
+            <li>
+              <div class="activity-time">09:00</div>
+              <div class="activity-icon"><i class="fas fa-plane-arrival"></i></div>
+              <div>
+                <div class="activity-text">Arrive & Check In</div>
+                <div class="activity-note">Head to your stay and freshen up</div>
+              </div>
+            </li>
+            <li>
+              <div class="activity-time">12:00</div>
+              <div class="activity-icon"><i class="fas fa-utensils"></i></div>
+              <div>
+                <div class="activity-text">Lunch at local restaurant</div>
+                <div class="activity-note">Explore nearby dining options</div>
+              </div>
+            </li>
+          </ul>
+
+          <button class="itinerary-add-btn mt-2" onclick="addActivity(this)">
+            <i class="fas fa-plus"></i> Add Activity
+          </button>
+        </div>
+      </div>
+
+      <button class="itinerary-add-btn" onclick="addDay()" id="addDayBtn">
+        <i class="fas fa-plus"></i> Add Another Day
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let dayCount = 1;
+
+function addDay() {
+  dayCount++;
+  const container = document.getElementById("dayPlanContainer");
+  const div = document.createElement("div");
+  div.className = "mb-3 day-block";
+
+  div.innerHTML = `
+    <div class="itinerary-day-header">
+      <div class="itinerary-day-num">Day ${dayCount}</div>
+      <input type="text" placeholder="e.g. Relaxation Day" class="day-title-input" />
+    </div>
+
+    <ul class="itinerary-activity-list">
+      <li class="empty-activity">No activities yet</li>
+    </ul>
+
+    <button class="itinerary-add-btn mt-2" onclick="addActivity(this)">
+      <i class="fas fa-plus"></i> Add Activity
+    </button>
+  `;
+
+  container.appendChild(div);
+  div.scrollIntoView({ behavior: "smooth" });
+}
+
+const icons = ["fa-coffee", "fa-utensils", "fa-camera", "fa-map", "fa-hiking", "fa-shopping-bag", "fa-star"];
+
+function addActivity(btn) {
+  const ul = btn.previousElementSibling;
+  const placeholder = ul.querySelector(".empty-activity");
+  if (placeholder) placeholder.remove();
+
+  const time = prompt("Activity time? e.g. 14:00", "10:00") || "10:00";
+  const text = prompt("Activity name?", "Explore the area") || "Activity";
+  const note = prompt("Note optional?", "") || "";
+  const icon = icons[Math.floor(Math.random() * icons.length)];
+
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <div class="activity-time">${time}</div>
+    <div class="activity-icon"><i class="fas ${icon}"></i></div>
+    <div>
+      <div class="activity-text">${text}</div>
+      ${note ? `<div class="activity-note">${note}</div>` : ""}
+    </div>
+  `;
+
+  ul.appendChild(li);
+}
+</script>

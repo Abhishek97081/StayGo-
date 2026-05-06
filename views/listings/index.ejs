@@ -1,149 +1,419 @@
-<% layout("/layouts/boilerplate")%> 
+<% layout("layouts/boilerplate") %>
 
-<style>
-  #filters {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="hero-content">
 
-  .filters {
-    text-align: center;
-    margin-right: 1rem;
-    margin-top: 1rem;
-    opacity: 0.7;
-    text-decoration: none;
-    color: #222;
-  }
+    <div class="hero-badge">
+      ✦ Discover & Book
+    </div>
 
-  .filters:hover {
-    opacity: 1;
-    cursor: pointer;
-    color: #222;
-  }
+    <h1 class="hero-title">
+      Find Your Next<br>
+      <em>Perfect Stay</em>
+    </h1>
 
-  .filters p {
-    font-size: 0.8rem;
-  }
-  .tax-toggle {
-    border: 1px solid #ccc;
-    border-radius: 1rem;
-    height: 2.5rem;
-    padding: 1rem;
-    margin-left: 5rem;
-    display: flex;
-    align-items: center;
-  }
-</style>
+    <p class="hero-subtitle">
+      From cozy mountain cabins to beachfront villas — every journey starts here.
+    </p>
 
-<div class="container mt-4"> 
+    <!-- SEARCH -->
+    <div class="hero-search-box">
 
-  <div id="filters">
-    <a href="/listings" class="filters">
-      <div><i class="fa-solid fa-fire"></i></div>
-      <p>Trending</p>
-    </a>
+      <i
+        class="fas fa-search"
+        style="color:#7A6A58;margin-left:0.8rem;align-self:center;"
+      ></i>
 
-    <a href="/listings?category=Rooms" class="filters">
-      <div><i class="fa-solid fa-bed"></i></div>
-      <p>Rooms</p>
-    </a>
+      <input
+        type="text"
+        id="heroSearch"
+        placeholder="Search by location, type or name…"
+      />
 
-    <a href="/listings?category=Iconic cities" class="filters">
-      <div><i class="fa-solid fa-city"></i></div>
-      <p>Iconic cities</p>
-    </a>
+      <button onclick="doSearch()">
+        Search
+      </button>
 
-    <a href="/listings?category=Mountains" class="filters">
-      <div><i class="fa-solid fa-mountain"></i></div>
-      <p>Mountains</p>
-    </a>
+    </div>
 
-    <a href="/listings?category=Castles" class="filters">
-      <div><i class="fa-solid fa-chess-rook"></i></div>
-      <p>Castles</p>
-    </a>
-
-    <a href="/listings?category=Pools" class="filters">
-      <div><i class="fa-solid fa-person-swimming"></i></div>
-      <p>Amazing pools</p>
-    </a>
-
-    <a href="/listings?category=Camping" class="filters">
-      <div><i class="fa-solid fa-campground"></i></div>
-      <p>Camping</p>
-    </a>
-
-    <a href="/listings?category=Farms" class="filters">
-      <div><i class="fa-solid fa-cow"></i></div>
-      <p>Farms</p>
-    </a>
-
-    <a href="/listings?category=Beachfront" class="filters">
-      <div><i class="fa-solid fa-umbrella-beach"></i></div>
-      <p>Beachfront</p></a>
-      
-    <a href="/listings?category=Other" class="filters">
-      <div><i class="fa-solid fa-water"></i></div>
-      <p>Rivers</p></a>
-    <a href="/listings?category=Other" class="filters">
-      <div><i class="fa-solid fa-monument"></i></div>
-      <p>Popular</p></a>
-<div class="tax-toggle">
-  <div class="form-check form-check-reverse form-switch">
-  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
-  <label class="form-check-label" for="switchCheckDefault">Display Taxes</label>
-</div>
-</div>
   </div>
+</section>
 
-  <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mt-2">
-    
-    <% for(let listing of allListings) { %> 
-      <div class="col"> 
-        
-        <a href="/listings/<%= listing._id %>" class="listing-links text-decoration-none text-dark">
-          
-          <div class="card h-100 border-0 shadow-sm"> 
-            
-            <img src="<%= listing.image.url %>" 
-                 class="card-img-top rounded-4" 
-                 style="height: 250px; object-fit: cover;" 
-                 alt="listing image"> 
-            
-            <div class="card-img-overlay"></div>
+<!-- FILTER BAR -->
+<div class="filter-bar">
 
-            <div class="card-body">
-              
-              <h5 class="card-title mb-1"><%= listing.title %></h5>
+  <div class="filter-chips container">
 
-              <p class="card-text text-muted">
-                ₹ <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>/night
-              </p> 
+    <button
+      class="filter-chip active"
+      onclick="filterCategory(this, 'all')"
+    >
+      <i class="fas fa-globe"></i>
+      All
+    </button>
 
-            </div> 
-          </div>
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'beach')"
+    >
+      <i class="fas fa-umbrella-beach"></i>
+      Beach
+    </button>
 
-        </a> 
-      </div> 
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'mountain')"
+    >
+      <i class="fas fa-mountain"></i>
+      Mountain
+    </button>
+
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'city')"
+    >
+      <i class="fas fa-city"></i>
+      City
+    </button>
+
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'countryside')"
+    >
+      <i class="fas fa-tree"></i>
+      Countryside
+    </button>
+
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'camping')"
+    >
+      <i class="fas fa-campground"></i>
+      Camping
+    </button>
+
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'lakefront')"
+    >
+      <i class="fas fa-water"></i>
+      Lakefront
+    </button>
+
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'luxury')"
+    >
+      <i class="fas fa-gem"></i>
+      Luxury
+    </button>
+
+    <button
+      class="filter-chip"
+      onclick="filterCategory(this, 'treehouse')"
+    >
+      <i class="fas fa-leaf"></i>
+      Treehouse
+    </button>
+
+  </div>
+</div>
+
+<!-- LISTINGS -->
+<div class="container py-4">
+
+  <div class="d-flex align-items-center justify-content-between mb-1">
+
+    <div>
+
+      <h2 class="section-title">
+        Popular Stays
+      </h2>
+
+      <p class="section-subtitle">
+        <%= allListings.length %> places to explore
+      </p>
+
+    </div>
+
+    <% if (currUser) { %>
+
+      <a
+        href="/listings/new"
+        class="btn-primary-custom"
+      >
+        <i class="fas fa-plus"></i>
+        Add Listing
+      </a>
+
     <% } %>
 
-  </div> 
-</div>
-<script>
-  const taxToggle = document.querySelector("#switchCheckDefault");
-  const priceElements = document.querySelectorAll(".card-text");
+  </div>
 
-  taxToggle.addEventListener("change", () => {
-    priceElements.forEach(el => {
-      let price = parseInt(el.textContent.replace(/[^0-9]/g, ""));
-      if (taxToggle.checked) {
-        price = Math.round(price * 1.18);
-        el.textContent = `₹ ${price.toLocaleString("en-IN")}/night`;
-      } else {
-        price = Math.round(price / 1.18);
-        el.textContent = `₹ ${price.toLocaleString("en-IN")}/night`;
-      }
+  <!-- MESSAGE -->
+  <p
+    id="noResultsMsg"
+    style="display:none;color:var(--text-muted);margin-top:1rem;"
+  >
+  </p>
+
+  <!-- GRID -->
+  <div
+    class="listings-grid"
+    id="listingsGrid"
+  >
+
+    <% for (let listing of allListings) { %>
+
+      <a
+        href="/listings/<%= listing._id %>"
+        class="listing-card"
+        data-category="<%= listing.category ? listing.category.toLowerCase() : 'other' %>"
+      >
+
+        <!-- IMAGE -->
+        <div class="listing-card-img">
+
+          <% if (listing.image && listing.image.url) { %>
+
+            <img
+              src="<%= listing.image.url %>"
+              alt="<%= listing.title %>"
+              loading="lazy"
+            />
+
+          <% } else { %>
+
+            <img
+              src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80"
+              alt="listing"
+              loading="lazy"
+            />
+
+          <% } %>
+
+          <!-- HEART -->
+          <button
+            class="listing-wishlist"
+            onclick="event.preventDefault(); toggleWishlist(this)"
+          >
+            <i class="far fa-heart"></i>
+          </button>
+
+          <!-- FEATURED -->
+          <% if (listing.featured) { %>
+
+            <div class="listing-badge">
+              ⭐ Featured
+            </div>
+
+          <% } %>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="listing-card-body">
+
+          <div class="listing-location">
+
+            <i class="fas fa-location-dot"></i>
+
+            <%= listing.location %>,
+            <%= listing.country %>
+
+          </div>
+
+          <div class="listing-title">
+            <%= listing.title %>
+          </div>
+
+          <div
+            style="font-size:0.8rem;color:var(--text-muted);"
+          >
+            Available all week
+          </div>
+
+          <div class="listing-meta">
+
+            <div class="listing-price">
+
+              ₹<%= listing.price.toLocaleString("en-IN") %>
+
+              <span>/ night</span>
+
+            </div>
+
+            <div class="listing-rating">
+
+              <i class="fas fa-star"></i>
+
+              <%= (4.2 + Math.random() * 0.7).toFixed(1) %>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </a>
+
+    <% } %>
+
+  </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+
+  // WISHLIST
+  function toggleWishlist(btn) {
+
+    const icon = btn.querySelector("i");
+
+    icon.classList.toggle("far");
+    icon.classList.toggle("fas");
+
+    icon.style.color =
+      icon.classList.contains("fas")
+        ? "#E63946"
+        : "";
+
+  }
+
+  // CATEGORY FILTER
+  function filterCategory(btn, cat) {
+
+    document.querySelectorAll(".filter-chip").forEach((b) => {
+      b.classList.remove("active");
     });
-  });
+
+    btn.classList.add("active");
+
+    const cards =
+      document.querySelectorAll(".listing-card");
+
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+
+      const cardCategory =
+        card.dataset.category.toLowerCase();
+
+      if (cat === "all" || cardCategory === cat) {
+
+        card.style.display = "";
+        visibleCount++;
+
+      } else {
+
+        card.style.display = "none";
+
+      }
+
+    });
+
+    // NO CATEGORY MATCH
+    if (visibleCount === 0) {
+
+      // SHOW ALL LISTINGS
+      cards.forEach((card) => {
+        card.style.display = "";
+      });
+
+      document.getElementById("noResultsMsg").innerText =
+        "No exact category match found. Showing other available stays.";
+
+      document.getElementById("noResultsMsg").style.display =
+        "block";
+
+    } else {
+
+      document.getElementById("noResultsMsg").style.display =
+        "none";
+
+    }
+
+    document.querySelector(".listings-grid").scrollIntoView({
+      behavior: "smooth",
+    });
+
+  }
+
+  // SEARCH
+  function doSearch() {
+
+    const searchInput =
+      document.getElementById("heroSearch");
+
+    const q =
+      searchInput.value.toLowerCase().trim();
+
+    const cards =
+      document.querySelectorAll(".listing-card");
+
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+
+      const text =
+        card.textContent.toLowerCase();
+
+      if (text.includes(q)) {
+
+        card.style.display = "";
+        visibleCount++;
+
+      } else {
+
+        card.style.display = "none";
+
+      }
+
+    });
+
+    // NO SEARCH MATCH
+    if (visibleCount === 0) {
+
+      // SHOW ALL LISTINGS
+      cards.forEach((card) => {
+        card.style.display = "";
+      });
+
+      document.getElementById("noResultsMsg").innerText =
+        "No exact match found. Showing other available stays.";
+
+      document.getElementById("noResultsMsg").style.display =
+        "block";
+
+    } else {
+
+      document.getElementById("noResultsMsg").style.display =
+        "none";
+
+    }
+
+    document.querySelector(".listings-grid").scrollIntoView({
+      behavior: "smooth",
+    });
+
+  }
+
+  // ENTER KEY SEARCH
+  const heroSearch =
+    document.getElementById("heroSearch");
+
+  if (heroSearch) {
+
+    heroSearch.addEventListener("keydown", (e) => {
+
+      if (e.key === "Enter") {
+        doSearch();
+      }
+
+    });
+
+  }
+
 </script>

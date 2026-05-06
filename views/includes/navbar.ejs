@@ -1,117 +1,62 @@
-<style>
-  .btn-search {
-    background-color: #ff385c;
-    color: white;
-    border-radius: 20px;
-    padding: 0 1rem;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    border: none;
-  }
+<!-- views/includes/navbar.ejs -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/listings">Stay<span>Go</span></a>
 
-  .btn-search:hover {
-    background-color: #ff385c;
-    color: white;
-  }
-
-  .btn-search i {
-    font-size: 0.8rem;
-  }
-
-  .search-input {
-    height: 40px;
-    font-size: 0.9rem;
-    border-radius: 20px;
-    width: 220px;
-  }
-
-  .navbar {
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
-  }
-
-  .menu-btn {
-    border-radius: 50px;
-    border: 1px solid #ddd;
-    padding: 6px 10px;
-    background-color: white;
-  }
-
-  .menu-btn i {
-    font-size: 1rem;
-  }
-</style>
-
-<nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-
-    <a class="navbar-brand" href="/listings">
-      <i class="fa-solid fa-compass"></i>
-    </a>
-
-    <button 
-      class="navbar-toggler" 
-      type="button" 
-      data-bs-toggle="collapse" 
-      data-bs-target="#navbarNavAltMarkup"
-    >
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
-      <!-- LEFT -->
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">Explore</a>
-      </div>
-
-      <!-- CENTER -->
-      <div class="d-flex justify-content-center flex-grow-1">
-        <form class="d-flex align-items-center" role="search" action="/listings/search" method="GET">
-          <input 
-            class="form-control me-2 search-input" 
-            type="search" 
-            name="q"
-            placeholder="Search destinations"
-          />
-          <button class="btn btn-search" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i> Search
-          </button>
-        </form>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="navbar-nav ms-auto align-items-center">
-
-        <a class="nav-link me-3" href="/listings/new">StayGo your home</a>
-
-        <div class="dropdown">
-          <button 
-            class="btn menu-btn dropdown-toggle" 
-            type="button" 
-            data-bs-toggle="dropdown"
-          >
-            <i class="fa-solid fa-bars"></i>
-          </button>
-
-          <ul class="dropdown-menu dropdown-menu-end">
-
-            <% if(!currUser){ %>
-              <li><a class="dropdown-item" href="/signup">Signup</a></li>
-              <li><a class="dropdown-item" href="/login">Login</a></li>
-            <% } else { %>
-              <li><a class="dropdown-item" href="/logout">Logout</a></li>
-            <% } %>
-
-          </ul>
-        </div>
-
-      </div>
-
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings">Explore</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/itinerary">
+            <i class="fas fa-map-marked-alt me-1"></i> My Itinerary
+          </a>
+        </li>
+        <% if (!currUser) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Sign In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn-nav-primary ms-1" href="/signup">Sign Up</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/listings/new">
+              <i class="fas fa-plus me-1"></i> Add Listing
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown">
+              <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.85rem;">
+                <%= currUser.username.charAt(0).toUpperCase() %>
+              </div>
+              <span><%= currUser.username %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius:12px;min-width:160px;overflow:hidden;">
+              <li><a class="dropdown-item py-2" href="/itinerary"><i class="fas fa-map-marked-alt me-2 text-muted"></i>My Itinerary</a></li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li>
+                <form action="/logout?_method=DELETE" method="POST">
+                  <button class="dropdown-item py-2 text-danger" type="submit">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        <% } %>
+      </ul>
     </div>
   </div>
 </nav>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+</script>
