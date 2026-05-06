@@ -55,6 +55,14 @@ const listingSchema = new Schema({
       "luxury",
       "treehouse",
       "other",
+
+      // old category values support
+      "Mountains",
+      "Arctic",
+      "Pools",
+      "Camping",
+      "Farms",
+      "Other",
     ],
     default: "other",
   },
