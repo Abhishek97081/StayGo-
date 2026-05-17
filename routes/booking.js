@@ -2,13 +2,16 @@ const express = require("express");
 
 const router = express.Router();
 
-const wrapAsync = require("../utils/wrapAsync");
+const wrapAsync =
+  require("../utils/wrapAsync");
 
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn } =
+  require("../middleware");
 
 const bookingController =
   require("../controllers/bookings");
 
+// CREATE ORDER
 router.post(
   "/create-order/:id",
 
@@ -19,6 +22,7 @@ router.post(
   )
 );
 
+// VERIFY PAYMENT
 router.post(
   "/verify-payment",
 
