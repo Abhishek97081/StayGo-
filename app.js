@@ -13,11 +13,13 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 const User = require("./models/user.js");
+const bookingRoutes = require("./routes/booking");
 
 const listingsRoutes = require("./routes/listing.js");
 const reviewsRoutes = require("./routes/review.js");
 const userRoutes = require("./routes/user.js");
 const itineraryRouter = require("./routes/itinerary.js");
+
 
 const dbUrl = process.env.ATLASDB_URL;
 const secret = process.env.SECRET || "fallbacksecret";
@@ -30,8 +32,9 @@ app.set("views", path.join(__dirname, "views"));
 // Middleware
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(methodOverride("_method"));
-
+app.use("/booking", bookingRoutes);
 // DB connection
 async function main() {
   await mongoose.connect(dbUrl);
@@ -92,6 +95,7 @@ app.get("/", (req, res) => {
 app.use("/listings", listingsRoutes);
 app.use("/listings/:id/reviews", reviewsRoutes);
 app.use("/itinerary", itineraryRouter);
+app.use("/booking", bookingRoutes);
 app.use("/", userRoutes);
 
 // Server

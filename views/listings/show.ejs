@@ -164,62 +164,236 @@
       </div>
     </div>
 
-    <!-- RIGHT: Booking Card -->
-    <div>
-      <div class="booking-card">
-        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:0.2rem;">
-          ₹<%= listing.price.toLocaleString('en-IN') %>
-          <span style="font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:400;color:var(--text-muted);"> / night</span>
-        </div>
-        <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1.2rem;">
-          <i class="fas fa-star" style="color:#F4A261;"></i> 4.8 · 24 reviews
+    <!-- Booking Card -->
+<div>
+  <div class="booking-card">
+
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:0.2rem;">
+      ₹<%= listing.price.toLocaleString('en-IN') %>
+
+      <span
+        style="
+          font-family:'DM Sans',sans-serif;
+          font-size:0.9rem;
+          font-weight:400;
+          color:var(--text-muted);
+        "
+      >
+        / night
+      </span>
+    </div>
+
+    <div
+      style="
+        font-size:0.78rem;
+        color:var(--text-muted);
+        margin-bottom:1.2rem;
+      "
+    >
+      <i
+        class="fas fa-star"
+        style="color:#F4A261;"
+      ></i>
+
+      4.8 · 24 reviews
+    </div>
+
+    <!-- Booking Inputs -->
+    <div
+      style="
+        border:1.5px solid var(--border);
+        border-radius:var(--radius-sm);
+        overflow:hidden;
+        margin-bottom:0.8rem;
+      "
+    >
+
+      <!-- Dates -->
+      <div class="row g-0">
+
+        <!-- Check In -->
+        <div
+          class="col-6 p-2"
+          style="border-right:1px solid var(--border);"
+        >
+
+          <div
+            style="
+              font-size:0.68rem;
+              font-weight:700;
+              letter-spacing:0.5px;
+              text-transform:uppercase;
+            "
+          >
+            Check-in
+          </div>
+
+          <input
+            type="date"
+            id="checkIn"
+            required
+            min="<%= new Date().toISOString().split('T')[0] %>"
+            style="
+              border:none;
+              outline:none;
+              font-size:0.9rem;
+              width:100%;
+              background:transparent;
+              font-family:'DM Sans',sans-serif;
+            "
+          />
         </div>
 
-        <div style="border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:0.8rem;">
-          <div class="row g-0">
-            <div class="col-6 p-2" style="border-right:1px solid var(--border);">
-              <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">Check-in</div>
-              <input type="date" style="border:none;outline:none;font-size:0.9rem;width:100%;background:transparent;font-family:'DM Sans',sans-serif;" />
-            </div>
-            <div class="col-6 p-2">
-              <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">Check-out</div>
-              <input type="date" style="border:none;outline:none;font-size:0.9rem;width:100%;background:transparent;font-family:'DM Sans',sans-serif;" />
-            </div>
+        <!-- Check Out -->
+        <div class="col-6 p-2">
+
+          <div
+            style="
+              font-size:0.68rem;
+              font-weight:700;
+              letter-spacing:0.5px;
+              text-transform:uppercase;
+            "
+          >
+            Check-out
           </div>
-          <div class="p-2" style="border-top:1px solid var(--border);">
-            <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">Guests</div>
-            <select style="border:none;outline:none;font-size:0.9rem;width:100%;background:transparent;font-family:'DM Sans',sans-serif;">
-              <option>1 guest</option>
-              <option>2 guests</option>
-              <option>3 guests</option>
-              <option>4+ guests</option>
-            </select>
-          </div>
+
+          <input
+            type="date"
+            id="checkOut"
+            required
+            style="
+              border:none;
+              outline:none;
+              font-size:0.9rem;
+              width:100%;
+              background:transparent;
+              font-family:'DM Sans',sans-serif;
+            "
+          />
+        </div>
+      </div>
+
+      <!-- Guests -->
+      <div
+        class="p-2"
+        style="border-top:1px solid var(--border);"
+      >
+
+        <div
+          style="
+            font-size:0.68rem;
+            font-weight:700;
+            letter-spacing:0.5px;
+            text-transform:uppercase;
+          "
+        >
+          Guests
         </div>
 
-        <button class="btn-primary-custom w-100 mb-2" style="justify-content:center;" onclick="alert('Booking feature coming soon!')">
-          Reserve Now
+        <select
+          id="guests"
+          style="
+            border:none;
+            outline:none;
+            font-size:0.9rem;
+            width:100%;
+            background:transparent;
+            font-family:'DM Sans',sans-serif;
+          "
+        >
+          <option value="1">1 guest</option>
+          <option value="2">2 guests</option>
+          <option value="3">3 guests</option>
+          <option value="4">4 guests</option>
+          <option value="5">5 guests</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Reserve Button -->
+    <button
+      id="rzp-button"
+      class="btn-primary-custom w-100 mb-2"
+      style="justify-content:center;"
+    >
+      Reserve Now
+    </button>
+
+    <!-- Add To Itinerary -->
+    <% if (currUser) { %>
+
+      <form action="/itinerary/add" method="POST">
+
+        <input
+          type="hidden"
+          name="listingId"
+          value="<%= listing._id %>"
+        />
+
+        <input
+          type="hidden"
+          name="listingTitle"
+          value="<%= listing.title %>"
+        />
+
+        <input
+          type="hidden"
+          name="listingLocation"
+          value="<%= listing.location %>"
+        />
+
+        <input
+          type="hidden"
+          name="listingPrice"
+          value="<%= listing.price %>"
+        />
+
+        <input
+          type="hidden"
+          name="listingImage"
+          value="<%= listing.image && listing.image.url ? listing.image.url : '' %>"
+        />
+
+        <button
+          type="submit"
+          class="btn-outline-custom w-100"
+          style="justify-content:center;"
+        >
+          <i class="fas fa-map-marked-alt"></i>
+
+          Add to Itinerary
         </button>
 
-        <!-- Add to Itinerary -->
-        <% if (currUser) { %>
-          <form action="/itinerary/add" method="POST">
-            <input type="hidden" name="listingId" value="<%= listing._id %>" />
-            <input type="hidden" name="listingTitle" value="<%= listing.title %>" />
-            <input type="hidden" name="listingLocation" value="<%= listing.location %>" />
-            <input type="hidden" name="listingPrice" value="<%= listing.price %>" />
-            <input type="hidden" name="listingImage" value="<%= listing.image && listing.image.url ? listing.image.url : '' %>" />
-            <button type="submit" class="btn-outline-custom w-100" style="justify-content:center;">
-              <i class="fas fa-map-marked-alt"></i> Add to Itinerary
-            </button>
-          </form>
-        <% } else { %>
-          <a href="/login" class="btn-outline-custom w-100" style="justify-content:center;">
-            <i class="fas fa-map-marked-alt"></i> Add to Itinerary
-          </a>
-        <% } %>
+      </form>
 
-        <p style="text-align:center;font-size:0.75rem;color:var(--text-muted);margin-top:0.8rem;">You won't be charged yet</p>
+    <% } else { %>
+
+      <a
+        href="/login"
+        class="btn-outline-custom w-100"
+        style="justify-content:center;"
+      >
+        <i class="fas fa-map-marked-alt"></i>
+
+        Add to Itinerary
+      </a>
+
+    <% } %>
+
+    <p
+      style="
+        text-align:center;
+        font-size:0.75rem;
+        color:var(--text-muted);
+        margin-top:0.8rem;
+      "
+    >
+      You won't be charged yet
+    </p>
+
+  </div>
+</div>
 
         <!-- Price Breakdown -->
         <hr class="divider">
@@ -258,3 +432,130 @@
     </div>
   </div>
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+document
+.getElementById("rzp-button")
+.addEventListener("click", async () => {
+
+    const checkIn =
+      document.getElementById("checkIn").value;
+
+    const checkOut =
+      document.getElementById("checkOut").value;
+
+    const guests =
+      document.getElementById("guests").value;
+
+    if (!checkIn || !checkOut) {
+
+        alert("Please select booking dates");
+
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+          "/booking/create-order/<%= listing._id %>",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              checkIn,
+              checkOut,
+              guests,
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            alert(data.message || "Booking failed");
+
+            return;
+        }
+
+        const options = {
+
+            key: data.key,
+
+            amount: data.order.amount,
+
+            currency: "INR",
+
+            name: "StayGo",
+
+            description: "Stay Booking Payment",
+
+            order_id: data.order.id,
+
+            handler: async function (response) {
+
+                const verifyResponse =
+                  await fetch(
+                    "/booking/verify-payment",
+                    {
+                      method: "POST",
+
+                      headers: {
+                        "Content-Type":
+                        "application/json",
+                      },
+
+                      body: JSON.stringify({
+
+                        ...response,
+
+                        bookingId:
+                        data.bookingId,
+                      }),
+                    }
+                  );
+
+                const result =
+                  await verifyResponse.json();
+
+                if (result.success) {
+
+                    alert(
+                      "Payment successful!"
+                    );
+
+                    window.location.href =
+                      "/listings";
+
+                } else {
+
+                    alert(
+                      "Payment verification failed"
+                    );
+                }
+            },
+
+            theme: {
+                color: "#222"
+            }
+        };
+
+        const rzp =
+          new Razorpay(options);
+
+        rzp.open();
+
+    } catch (err) {
+
+        console.log(err);
+
+        alert("Something went wrong");
+    }
+});
+</script>
